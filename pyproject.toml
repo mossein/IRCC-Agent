@@ -1,0 +1,61 @@
+[project]
+name = "ircc-agent"
+version = "0.1.0"
+description = "LLM-powered agent that auto-fills IRCC immigration PDF applications using RAG"
+readme = "README.md"
+authors = [
+    { name = "Mohammad Jafari", email = "mmoghaddasja@mun.ca" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    # LangChain ecosystem
+    "langchain>=0.3.0",
+    "langchain-community>=0.3.0",
+    "langchain-google-genai>=2.0.0",
+    # Vector store
+    "chromadb>=0.5.0",
+    # PDF processing
+    "pypdf>=4.0.0",
+    "fillpdf>=0.7.0",
+    "pymupdf>=1.24.0",
+    # Document parsing
+    "unstructured>=0.15.0",
+    "pytesseract>=0.3.10",
+    "pdf2image>=1.17.0",
+    "pillow>=10.0.0",
+    # CLI
+    "typer>=0.12.0",
+    "rich>=13.0.0",
+    # Config
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "langchain-chroma>=1.0.0",
+    "langchain-openai>=1.1.0",
+    "pyautogui>=0.9.54",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.6.0",
+]
+
+[project.scripts]
+ircc-agent = "ircc_agent.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
