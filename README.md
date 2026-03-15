@@ -90,6 +90,32 @@ src/ircc_agent/
     └── core.py      # Agent orchestration
 ```
 
+## Updates
+
+### `ircc-tool` CLI & `/fill-ircc` Claude Code Skill
+
+A new lightweight CLI tool and Claude Code slash command for filling IRCC PDF forms directly, without the RAG pipeline.
+
+**Why:** IRCC forms use XFA (XML Forms Architecture), a deprecated Adobe format. The existing agent uses regex-based XML manipulation which breaks on duplicate field names and substrings. The new tool uses `pikepdf` + `lxml` for proper XML parsing and filling.
+
+**What was added:**
+
+- **`ircc-tool` CLI** (`src/ircc_tool/`) — Standalone tool for PDF inspection and form filling
+  - `uv run ircc-tool inspect <form.pdf>` — Outputs all form fields as JSON (supports both XFA and AcroForm)
+  - `uv run ircc-tool fill <form.pdf> <data.json> -o <output.pdf>` — Fills a PDF form from a JSON data file
+- **`/fill-ircc` slash command** (`.claude/commands/fill-ircc.md`) — Claude Code skill that orchestrates the full workflow: reads supporting documents (passports, letters, etc.), maps extracted info to form fields, and fills the PDF
+- **New dependencies:** `pikepdf`, `lxml`
+
+**Usage with Claude Code:**
+
+```
+/fill-ircc /path/to/IMM5257E.pdf /path/to/client/documents/
+```
+
+Claude will inspect the form, read the documents (including scanned images), present a mapping table for review, and generate the filled PDF.
+
+**Note:** Filled XFA PDFs must be opened in Adobe Acrobat — macOS Preview cannot render XFA form data.
+
 ## License
 
 MIT
